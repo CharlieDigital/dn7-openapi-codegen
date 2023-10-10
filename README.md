@@ -1,5 +1,7 @@
 # Ultimate .NET OpenAPI Workflow
 
+![Watch build](/img/watch-build.gif)
+
 If you're building full-stack TypeScript solutions with .NET or you have a setup where you need to have the same models in some TypeScript code (e.g. same model definitions in a TypeScript serverless function), then you've come to the right place!
 
 I've previously written about [how to set up OpenAPI TypeScript client generation with .NET 6](https://chrlschn.medium.com/net-6-web-apis-with-openapi-typescript-client-generation-a743e7f8e4f5).  But one problem with this approach is that if we want to have that sweet `dotnet watch` hot reload on the API, we can't generate the updated client unless we:

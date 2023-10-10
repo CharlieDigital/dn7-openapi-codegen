@@ -54,13 +54,13 @@ public class ProfileController : ControllerBase {
 /// </summary>
 /// <param name="Id">The ID of the profile.</param>
 /// <param name="Name">The name of the user.</param>
-/// <param name="Email">The email address of the user.</param>
+/// <param name="EmailAddress">The email address of the user.</param>
 /// <param name="PhoneNumber">The phone number of the user.</param>
 /// <param name="Address">An address associated with the user.</param>
 public record Profile(
   [property: Required] Guid Id,
   [property: Required] string Name,
-  [property: Required] string Email,
+  [property: Required] string EmailAddress,
   [property: Required] string PhoneNumber,
   [property: Required] Address Address
 );

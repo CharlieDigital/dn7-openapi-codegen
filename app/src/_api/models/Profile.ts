@@ -20,7 +20,7 @@ export type Profile = {
     /**
      * The email address of the user.
      */
-    email: string;
+    emailAddress: string;
     /**
      * The phone number of the user.
      */

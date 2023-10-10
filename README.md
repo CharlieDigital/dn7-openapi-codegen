@@ -9,15 +9,15 @@ I've previously written about [how to set up OpenAPI TypeScript client generatio
 
 Just rebuilding it won't work properly as it would attempt to write the binaries to the same target.
 
-Ideally, we can keep the service running since we're only updating the generated TypeScript client bindings.
+Ideally, we can keep the service running since we're only updating the generated TypeScript client bindings.  And if we can keep the backend service running, if the client binding generation causes the frontend to reload, it won't error if our service is stopped.
 
 For this to work, we'll need a bit of simple -- but perhaps not-so-obvious -- configurations.
 
 ## Setting Up the Frontend
 
-On the frontend, we are setting up a basic directory structure.
+On the frontend, we are setting up a basic directory structure just for the purposes of this sample.
 
-When setting this up, you would in initialize your application frontend first and then decide where you want the generated API bindings to go.
+When setting this up, you would in initialize your application frontend first (e.g. React, Vue, Svelte, or Angular project) and then decide where you want the generated API bindings to go.
 
 In our case, our bindings will go into `/app/src/_api`.
 

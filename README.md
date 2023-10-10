@@ -153,6 +153,8 @@ The first is simply a script to initiate hot reload on our API with the `--non-i
 
 The second does the same but instead of hot reloading our code, it generates a new schema instead!
 
-It's easy to write the equivalent batch or PowerShell scripts and you can even script them to run together.
+*(It's easy to write the equivalent batch or PowerShell scripts and you can even script them to run together.)*
 
-A special note: `dotnet watch build` is broken with the preview version of .NET 8 that I have installed (`8.0.100-preview.7.23376.3`) so the `global.json` file is necessary to point to a stable release version where `dotnet watch build` does work correctly.  To see which versions you have locally, run `dotnet --list-sdks`.
+Now run each in a separate terminal window and you have hot reload for your API as well as your TypeScript client/model generation!
+
+*(A special note: `dotnet watch build` is broken with the preview version of .NET 8 that I have installed (`8.0.100-preview.7.23376.3`) so the `global.json` file is necessary to point to a stable release version where `dotnet watch build` does work correctly.  To see which versions you have locally, run `dotnet --list-sdks`.)*

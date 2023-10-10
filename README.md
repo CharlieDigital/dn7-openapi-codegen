@@ -91,7 +91,7 @@ Now that we have the tooling, we need to update the `.csproj` file with a post-b
 </Target>
 ```
 
-The script performs two main actionsL:
+The script performs two main actions:
 
 1. Generate the OpenAPI schema `.json` file using the Swagger CLI and output it to our frontend app folder
 2. Use the generated OpenAPI schema file to generate the TypeScript client and bindings in our frontend app using `openapi-typescript-codegen`

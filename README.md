@@ -149,11 +149,20 @@ dotnet watch --non-interactive
 dotnet watch build --non-interactive -- --configuration Gen
 ```
 
+*(It's easy to write the equivalent batch or PowerShell scripts and you can even script them to run together.)*
+
 The first is simply a script to initiate hot reload on our API with the `--non-interactive` flag.
 
-The second does the same but instead of hot reloading our code, it generates a new schema instead!
+The second does the same but instead of hot reloading our code, it generates a new schema instead!  The `--configuration Gen` is key: this directs the output to a different build directory:
 
-*(It's easy to write the equivalent batch or PowerShell scripts and you can even script them to run together.)*
+```
+backend
+  bin
+    Debug/net7.0 <---- Where the runtime build goes
+    Gen/net7.0   <---- Where the code generation build goes
+```
+
+By using a separate configuration for our `watch build`, we can now rebuild while hot reload is active since we're targeting a different output target.
 
 Now run each in a separate terminal window and you have hot reload for your API as well as your TypeScript client/model generation!
 

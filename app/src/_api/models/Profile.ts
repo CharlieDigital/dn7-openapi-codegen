@@ -24,7 +24,7 @@ export type Profile = {
     /**
      * The phone number of the user.
      */
-    phoneNumber?: string;
+    phoneNumber: string;
     address: Address;
 };
 

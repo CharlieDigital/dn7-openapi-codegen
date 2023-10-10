@@ -13,21 +13,18 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <!-- This sesction is a set of post-build commands -->
   <Target Name="Swagger" AfterTargets="Build" Condition="$(Configuration)=='Gen' Or $(GEN)=='true'">
     <Message Text="Generating OpenAPI schema file." Importance="high" />
+    <!-- Restore the tool if needed -->
     <Exec Command="dotnet tool restore" />
+
     <!-- Generate the external API.  See SetupSwagger for this doc. -->
     <Exec
       Command="dotnet swagger tofile --output ../app/src/_api/schema-api.json $(OutputPath)$(AssemblyName).dll v1"
       EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development"
       WorkingDirectory="$(ProjectDir)" />
-  </Target>
 
-  <!--
-    Generates the TypeScript clients and models using the schema.
-  -->
-  <Target Name="GenTsClient" AfterTargets="Build" Condition="$(Configuration)=='Gen' Or $(GEN)=='true'">
-    <Message Text="Generating TypeScript client." Importance="high" />
     <!-- Generate TS bindings for the web app -->
     <Exec Command="yarn gen" WorkingDirectory="../app" />
   </Target>

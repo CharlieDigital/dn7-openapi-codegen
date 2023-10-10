@@ -9,7 +9,7 @@ I've previously written about [how to set up OpenAPI TypeScript client generatio
 
 Just rebuilding it won't work properly as it would attempt to write the binaries to the same target.
 
-Ideally, we can keep the service running since we're only updating the generated TypeScript client bindings.  And if we can keep the backend service running, if the client binding generation causes the frontend to reload, it won't error if our service is stopped.
+Ideally, we can keep the API service running since we're only updating the generated TypeScript client bindings.  If we can keep the backend service running and the client binding generation causes the frontend to reload, it won't error if our service is stopped.
 
 For this to work, we'll need a bit of simple -- but perhaps not-so-obvious -- configurations.
 
@@ -17,7 +17,7 @@ For this to work, we'll need a bit of simple -- but perhaps not-so-obvious -- co
 
 On the frontend, we are setting up a basic directory structure just for the purposes of this sample.
 
-When setting this up, you would in initialize your application frontend first (e.g. React, Vue, Svelte, or Angular project) and then decide where you want the generated API bindings to go.
+When setting this up for your own use, you would initialize your application frontend first (e.g. React, Vue, Svelte, or Angular project) and then decide where you want the generated API bindings to go.
 
 In our case, our bindings will go into `/app/src/_api`.
 
@@ -66,48 +66,44 @@ dotnet new tool-manifest
 dotnet tool install swashbuckle.aspnetcore.cli
 ```
 
-Now that we have the tooling, we need to update the `.csproj` file.  First, to invoke the tool:
+Now that we have the tooling, we need to update the `.csproj` file with a post-build action:
 
 ```xml
-<!--
-  Generates the OpenAPI schema file into the front-end API target.
--->
-<Target Name="Swagger" AfterTargets="Build" Condition="$(Configuration)=='Gen' Or $(GEN)=='true'">
+<!-- This sesction is a set of post-build commands -->
+<Target
+  Name="Swagger"
+  AfterTargets="Build"
+  Condition="$(Configuration)=='Gen' Or $(GEN)=='true'">
   <Message Text="Generating OpenAPI schema file." Importance="high" />
+  <!-- Restore the tool if needed -->
   <Exec Command="dotnet tool restore" />
-  <!-- Generate the external API.  See SetupSwagger for this doc. -->
+
+  <!-- (1) Generate the external API.  See SetupSwagger for this doc. -->
   <Exec
     Command="dotnet swagger tofile --output ../app/src/_api/schema-api.json $(OutputPath)$(AssemblyName).dll v1"
     EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development"
     WorkingDirectory="$(ProjectDir)" />
+
+  <!-- (2) Generate TS bindings for the web app -->
+  <Exec Command="yarn gen" WorkingDirectory="../app" />
 </Target>
 ```
+
+The script performs two main actionsL:
+
+1. Generate the OpenAPI schema `.json` file using the Swagger CLI and output it to our frontend app folder
+2. Use the generated OpenAPI schema file to generate the TypeScript client and bindings in our frontend app using `openapi-typescript-codegen`
 
 There are two special things we've added to this build script:
 
 1. A condition to only run this script if the `Configuration = 'Gen'`
 2. Or if the `GEN` environment variable is `true`
 
-These two conditions serve different purposes.  The first is to allow us to have to output directories since each build configuration maps to a different output directory.
+These two conditions serve different purposes.  The first is to allow us to have two output directories since each build configuration maps to a different output directory.
 
-Why is this important?  If we want to run `dotnet watch`, that will prevent us from generating the schema and clients unless we stop the application first.  Ideally, we can keep hot reload *and* be able to update the client.
+Why is this important?  If we want to run `dotnet watch` for hot reload of our API, that will prevent us from generating the schema and clients unless we stop the application first.  Ideally, we can keep hot reload *and* be able to update the client.
 
 The second condition allows us to include the build in CI/CD if we want to generate it as part of our `Release` build.
-
-Now we add the second post-build action:
-
-```xml
-<!--
-  Generates the TypeScript clients and models using the schema.
--->
-<Target Name="GenTsClient" AfterTargets="Build" Condition="$(Configuration)=='Gen' And $(GEN)=='true'">
-  <Message Text="Generating TypeScript client." Importance="high" />
-  <!-- Generate TS bindings for the web app -->
-  <Exec Command="yarn gen" WorkingDirectory="../app" />
-</Target>
-```
-
-This simply invokes the `gen` script that was configured in `/app/package.json`.
 
 Finally, in the main `PropertyGroup`, we'll add a declaration to get the XML comments which will be pulled into the client schema:
 
@@ -167,3 +163,21 @@ By using a separate configuration for our `watch build`, we can now rebuild whil
 Now run each in a separate terminal window and you have hot reload for your API as well as your TypeScript client/model generation!
 
 *(A special note: `dotnet watch build` is broken with the preview version of .NET 8 that I have installed (`8.0.100-preview.7.23376.3`) so the `global.json` file is necessary to point to a stable release version where `dotnet watch build` does work correctly.  To see which versions you have locally, run `dotnet --list-sdks`.)*
+
+## Output
+
+If all goes well, you'll have the following output generated for your services:
+
+![Service bindings](/img/service-mapping.png)
+
+And your models:
+
+![Model bindings](/img/type-mapping.png)
+
+Note how nicely everything is translated into the TypeScript bindings -- comments included.
+
+In usage, you can see that we get strong typing through the stack, full intellisense support, and even the comments from the backend!
+
+![Screen capture](/img/typescript-svc.gif)
+
+Having all of this with hot reload on top of it makes developing web APIs and frontends with .NET a very productive DX!

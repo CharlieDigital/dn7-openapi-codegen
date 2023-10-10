@@ -23,7 +23,11 @@ public class ProfileController : ControllerBase {
   [ProducesResponseType(typeof(List<Profile>), StatusCodes.Status200OK)]
   [ProducesResponseType(StatusCodes.Status401Unauthorized)]
   [ProducesResponseType(StatusCodes.Status400BadRequest)]
-  public async Task<Results<UnauthorizedHttpResult, BadRequest<string>, Ok<List<Profile>>>> GetProfiles() {
+  public async Task<Results<
+    UnauthorizedHttpResult,
+    BadRequest<string>,
+    Ok<List<Profile>>>
+  > GetProfiles() {
     // TODO: Check authorization and return
     // return TypedResults.Unauthorized();
 
@@ -57,7 +61,7 @@ public record Profile(
   [property: Required] Guid Id,
   [property: Required] string Name,
   [property: Required] string Email,
-   string PhoneNumber,
+  [property: Required] string PhoneNumber,
   [property: Required] Address Address
 );
 

@@ -1,0 +1,188 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "version": "1.0"
+  },
+  "paths": {
+    "/profiles": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Gets the profiles from the backend",
+        "operationId": "GetProfiles",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Profile"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Profile"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Profile"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "required": [
+          "city",
+          "postalCode",
+          "state",
+          "street"
+        ],
+        "type": "object",
+        "properties": {
+          "street": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The street address of the user."
+          },
+          "city": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The city that the address is located in."
+          },
+          "state": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The state that the address is located in."
+          },
+          "postalCode": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The postal code that the address is located in."
+          }
+        },
+        "additionalProperties": false,
+        "description": "An address associated with a user profile."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Profile": {
+        "required": [
+          "address",
+          "email",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the profile.",
+            "format": "uuid"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the user."
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "description": "The email address of the user."
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "The phone number of the user."
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a user profile."
+      }
+    }
+  }
+}

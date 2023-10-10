@@ -182,4 +182,6 @@ In usage, you can see that we get strong typing through the stack, full intellis
 
 ![Screen capture](/img/typescript-svc.gif)
 
+If you add Entity Framework to this stack, it's easy to achieve end-to-end type safety all the ways from your database to your frontend clients.
+
 Having all of this with hot reload on top of it makes developing web APIs and frontends with .NET a very productive DX!
